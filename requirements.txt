@@ -1,0 +1,8 @@
+flask
+werkzeug
+pyjwt
+flask-swagger-ui
+flask-cors
+psycopg2-binary
+python-dotenv
+requests

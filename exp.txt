@@ -1,0 +1,5 @@
+Usefull commands for exploiting
+
+SQL Injection Login:
+    "admin'OR 1=1 --"
+
