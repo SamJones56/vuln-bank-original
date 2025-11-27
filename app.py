@@ -1438,12 +1438,10 @@ def get_card_transactions(current_user, card_id):
 def update_card_limit(current_user, card_id):
     try:
         data = request.get_json()
-        
         # Mass Assignment Vulnerability - Build dynamic query based on all input fields
         update_fields = []
         update_values = []
         updated_fields_list = []  # Store field names in a regular list
-        
         # Iterate through all fields sent in request
         # Vulnerability: No whitelist of allowed fields
         # This allows updating any column including balance
@@ -1453,12 +1451,10 @@ def update_card_limit(current_user, card_id):
                 value = float(value)
             except (ValueError, TypeError):
                 value = str(value)
-            
             # Vulnerability: Direct field name injection
             update_fields.append(f"{key} = %s")
             update_values.append(value)
-            updated_fields_list.append(key)  # Add to list instead of dict_keys
-            
+            updated_fields_list.append(key)  # Add to list instead of dict_keys 
         # Vulnerability: BOLA - no verification if card belongs to user
         query = f"""
             UPDATE virtual_cards 
@@ -1466,9 +1462,7 @@ def update_card_limit(current_user, card_id):
             WHERE id = {card_id}
             RETURNING *
         """
-        
         result = execute_query(query, tuple(update_values))
-        
         if result:
             # Vulnerability: Information disclosure - returning all updated fields
             return jsonify({
@@ -1486,7 +1480,6 @@ def update_card_limit(current_user, card_id):
                     }
                 }
             })
-            
         return jsonify({
             'status': 'error',
             'message': 'Card not found'
