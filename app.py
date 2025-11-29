@@ -806,7 +806,6 @@ def admin_panel(current_user):
 def approve_loan(current_user, loan_id):
     if not current_user.get('is_admin'):
         return jsonify({'error': 'Access Denied'}), 403
-    
     try:
         # Vulnerability: Race condition in loan approval
         # Vulnerability: No validation if loan is already approved
@@ -814,7 +813,6 @@ def approve_loan(current_user, loan_id):
             "SELECT * FROM loans WHERE id = %s",
             (loan_id,)
         )[0]
-        
         if loan:
             # Vulnerability: No transaction atomicity
             # Vulnerability: No validation of loan amount
@@ -847,13 +845,11 @@ def approve_loan(current_user, loan_id):
                     }
                 }
             })
-        
         return jsonify({
             'status': 'error',
             'message': 'Loan not found',
             'loan_id': loan_id
         }), 404
-        
     except Exception as e:
         # Vulnerability: Detailed error exposure
         print(f"Loan approval error: {str(e)}")
@@ -1579,7 +1575,6 @@ def create_bill_payment(current_user):
                     'status': 'error',
                     'message': 'Insufficient card balance'
                 }), 400
-                
         elif payment_method == 'balance':
             # Check user balance
             # Vulnerability: Race condition possible
@@ -1594,13 +1589,10 @@ def create_bill_payment(current_user):
                     'status': 'error',
                     'message': 'Insufficient balance'
                 }), 400
-        
         # Generate reference number
         reference = f"BILL{int(time.time())}"  # Vulnerability: Predictable reference numbers
-        
         # Create payment record
         queries = []
-        
         # Insert payment record
         payment_query = """
             INSERT INTO bill_payments 
@@ -1618,7 +1610,6 @@ def create_bill_payment(current_user):
             data.get('description', 'Bill Payment')
         )
         queries.append((payment_query, payment_values))
-        
         # Update balance based on payment method
         if payment_method == 'virtual_card':
             card_update = """
@@ -1662,7 +1653,6 @@ def create_bill_payment(current_user):
 @token_required
 def get_payment_history(current_user):
     try:
-        # Vulnerability: No pagination
         # Vulnerability: SQL injection possible
         query = f"""
             SELECT 
