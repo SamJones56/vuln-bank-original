@@ -10,7 +10,7 @@
 1. Clone the repository:
 ```bash
 git clone https://github.com/SamJones56/vuln-bank-original.git
-cd vuln-bank
+cd vuln-bank-original
 ```
 
 2. Create and activate a virtual environment:
